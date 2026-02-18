@@ -16,7 +16,7 @@ import (
 const todoDbFile = "./todosDB.db?_journal_mode=WAL&_busy_timeout=5000"
 
 type Todo struct {
-	ID            uint32
+	ID            uint
 	Description   string
 	CompletedDate *string
 	CreatedDate   string
@@ -77,14 +77,14 @@ func listTodos(db *sql.DB) {
 	t.Render()
 }
 
-func completeTodo(db *sql.DB, id uint32) {
+func completeTodo(db *sql.DB, id uint) {
 	_, err := db.Exec("UPDATE todos SET completed = DATETIME('now', 'localtime') WHERE id = ?", id)
 	if err != nil {
 		panic("Unable to update a todo in DB")
 	}
 }
 
-func deleteTodo(db *sql.DB, id uint32) {
+func deleteTodo(db *sql.DB, id uint) {
 	_, err := db.Exec("DELETE FROM todos WHERE id = ?", id)
 	if err != nil {
 		panic("Unable to delete a todo in DB")
@@ -92,8 +92,8 @@ func deleteTodo(db *sql.DB, id uint32) {
 }
 
 func main() {
-	var completedId uint32
-	var deletedId uint32
+	var completedId uint
+	var deletedId uint
 
 	db := createDb()
 	defer db.Close()
@@ -126,7 +126,7 @@ func main() {
 				Name:    "complete",
 				Aliases: []string{"c"},
 				Arguments: []cli.Argument{
-					&cli.Uint32Arg{
+					&cli.UintArg{
 						Name:        "id",
 						Destination: &completedId,
 					},
@@ -142,7 +142,7 @@ func main() {
 				Name:  "delete",
 				Usage: "Delete a todo",
 				Arguments: []cli.Argument{
-					&cli.Uint32Arg{
+					&cli.UintArg{
 						Name:        "id",
 						Destination: &deletedId,
 					},
