@@ -101,7 +101,7 @@ func main() {
 		Name:  "todo",
 		Usage: "Manage your todo list",
 		Action: func(context.Context, *cli.Command) error {
-			fmt.Println("Hello World!")
+			listTodos(db)
 			return nil
 		},
 		Commands: []*cli.Command{
